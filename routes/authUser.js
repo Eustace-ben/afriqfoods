@@ -9,9 +9,8 @@ route.post('/login', userController.login);
 route.get('/logout', userController.logout);
 
 route.post('/addDetails', userController.isLoggedIn, addDetailsController.addDetails);
-route.get('/edit', userController.isLoggedIn, editController.edit);
-
-
+route.post('/editInfo', userController.isLoggedIn, editController.editInfo );
+route.post('/edit', userController.isLoggedIn, editController.edit);
 
 
 

@@ -13,24 +13,32 @@
 <body>
 
 
-  <form action="/users/edit/" method="POST">
+  <form action="/users/editInfo/" method="POST">
     <div class="container-fliud mt-5 d-flex justify-content-center " style="color:white">
       <div class="row col-xs-10 col-sm-10 col-md-5 col-lg-4 col-xlg-3 col-xxlg-3 ">
         <div class="container border border-primary p-5 bg-secondary">
 
-
           <p class="pb-5 text-center">Edit Details </p>
           <div class="mb-3">
-            <label class="form-label">Name</label>
-            <input type="text" class="form-control" value="{{data.name}}" name="name">
-            <input type="hidden" class="form-control" value="{{data.id}}" name="id">
+            <label class="form-label">skills</label>
+            <input type="text" class="form-control" value="{{result.skills}}" name="skills">
+            <input type="hidden" class="form-control" value="{{result.user_id}}" name="id">
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Email address</label>
-            <input type="email" class="form-control" value="{{data.email}}" name="email">
+            <label class="form-label">About </label>
+            <input type="text" class="form-control" value="{{result.about}}" name="about">
           </div>
 
+          {{!-- <div class="mb-3">
+            <label class="form-label">Recipes</label>
+            <input type="email" class="form-control" value="{{result.Recipes}}" name="email">
+          </div> --}}
+
+          <div class="mb-3">
+            <label class="form-label">website</label>
+            <input type="text" class="form-control" value="{{result.website}}" name="website">
+          </div>
 
           <button type="submit" class="btn btn-primary" id="liveAlertBtn">save</button>
 

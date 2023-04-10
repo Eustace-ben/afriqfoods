@@ -85,7 +85,6 @@ exports.login = async (req, res) => {
 
         const id = data5[0].id;
         const token = jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
-        //console.log("this is my token " + token);
 
         const cookieOptions = {
           expires: new Date(
@@ -110,15 +109,22 @@ exports.isLoggedIn = async (req, res, next) => {
     try {
       const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
       console.log(decoded);
-      db.query("SELECT * FROM users WHERE id = ?", [decoded.id], async (error, data) => {
-
+      db.query("SELECT * FROM users  WHERE users.id = ?", [decoded.id], async (error, data) => {
         if (!data) {
           return next();
         }
-        console.log(data);  
         req.user = data[0];
-        next();
+       // console.log(req.user);
 
+        db.query("SELECT * FROM info WHERE user_id = ?",[req.user.id], (error, result1)=>{
+          if(!result1.length){
+             console.log("User have not added any details");
+          }else{
+          req.result = result1[0];
+          }
+          next();
+        })
+      
       });
     } catch (error) {
       console.log(error);
@@ -140,4 +146,14 @@ exports.logout = async (req, res) => {
   )
   res.redirect('/');
 }
+
+
+
+
+
+
+
+
+
+
 

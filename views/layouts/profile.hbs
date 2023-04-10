@@ -44,11 +44,7 @@
   </nav>
 
   <br><br> <br>
-  {{#if result}}
-  <h1>working</h1>
-  {{else}}
-  <h1>not working</h1>
-  {{/if}}
+
 
   <section class="bg-light">
     <div class="container">
@@ -93,18 +89,28 @@
               <img src="" class="img responsive">
             </div>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item lead text-capitalize"><span class="fw-semibold"> Skills : </span> {{result.skills}}
+              <li class="list-group-item lead text-capitalize"><span class="fw-semibold"> Skills : </span>
+                {{result.skills}}
               </li>
-              <li class="list-group-item lead "><span class="fw-semibold"> Recipes Published : </span> {{result.Recipes}} <a href="#"
-                  class="btn btn-primary"> 3 </a> </li>
+              <li class="list-group-item lead "><span class="fw-semibold"> Recipes Published : </span> {{result.Recipes}}
+                <a href="#" class="btn btn-primary"> 3 </a>
+              </li>
             </ul>
             <div class="card-body">
-              <span class="card-link text-capitalize"> Add website :  <a> {{result.about}} </a></span>
+              <span class="card-link text-capitalize"> Add website : <a> {{result.about}} </a></span>
+      
             </div>
-              <span class="col-2-lg col-2-md col-2-sm col-2-xs m-4"><a href="/addDetails/{{user.id}}" class="card-link btn btn-primary">Add Details</a> <a href="/edit/{{user.id}}" class="card-link btn btn-primary">Modify Details</a></span> 
+               <div class="card-body">
+                {{#if result}}
+                <a href="/editInfo/{{result.user_id}}" class="card-link btn btn-primary btn-sm  m-2">Modify Details</a>
+                {{else}}
+                  <a href="/addDetails/{{user.id}}" class="card-link btn btn-primary btn-sm m-2 ">Add Details </a>
+                  {{/if}}
+               </div>       
           </div>
+          
         </div>
-         
+
   </section>
 
 

@@ -9,7 +9,7 @@ const morgan = require("morgan");
 
 
 const app = express();
-
+app.use(morgan("combined"));
 
 //setting application port
 const PORT = process.env.PORT || 5000;
@@ -21,20 +21,17 @@ app.use(cookie());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended : false}));
 
-//setting application view engine
-app.engine('hbs',exphbs.engine({ extname: '.hbs'}))
-app.set('view engine', 'hbs');
-
 // include routes in the application
 app.use('/', require('./routes/userRoute'));
 app.use('/users', require('./routes/authUser'));
 
-app.use(morgan("combined"));
+
+//setting application view engine
+app.engine('hbs',exphbs.engine({ extname: '.hbs'}))
+app.set('view engine', 'hbs');
 
 //setting application static files 
 app.use(express.static(path.join(__dirname, 'public')));
-
-
 
 
 
