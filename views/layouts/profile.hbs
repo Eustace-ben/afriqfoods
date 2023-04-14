@@ -32,7 +32,7 @@
               <a class="nav-link active" aria-current="page" href="/">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Showcase Recipes</a>
+              <a class="nav-link" href="./showcase/{{user.id}}">Showcase Recipes</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/users/logout">Logout</a>
@@ -92,23 +92,27 @@
               <li class="list-group-item lead text-capitalize"><span class="fw-semibold"> Skills : </span>
                 {{result.skills}}
               </li>
-              <li class="list-group-item lead "><span class="fw-semibold"> Recipes Published : </span> {{result.Recipes}}
-                <a href="#" class="btn btn-primary"> 3 </a>
+              <li class="list-group-item lead "><span class="fw-semibold"> Recipes Published : </span>
+                {{result.Recipes}}
+                <a href="#" class=" badge btn btn-primary"> 3 </a>
               </li>
+              {{!-- <button type="button" class="btn btn-primary">
+                Notifications <span class="badge text-bg-secondary">4</span>
+              </button> --}}
             </ul>
             <div class="card-body">
               <span class="card-link text-capitalize"> Add website : <a> {{result.about}} </a></span>
-      
+
             </div>
-               <div class="card-body">
-                {{#if result}}
-                <a href="/editInfo/{{result.user_id}}" class="card-link btn btn-primary btn-sm  m-2">Modify Details</a>
-                {{else}}
-                  <a href="/addDetails/{{user.id}}" class="card-link btn btn-primary btn-sm m-2 ">Add Details </a>
-                  {{/if}}
-               </div>       
+            <div class="card-body">
+              {{#if result}}
+              <a href="/editInfo/{{result.user_id}}" class="card-link btn btn-primary btn-sm  m-2">Modify Details</a>
+              {{else}}
+              <a href="/addDetails/{{user.id}}" class="card-link btn btn-primary btn-sm m-2 ">Add Details </a>
+              {{/if}}
+            </div>
           </div>
-          
+
         </div>
 
   </section>

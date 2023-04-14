@@ -123,8 +123,7 @@ exports.isLoggedIn = async (req, res, next) => {
           req.result = result1[0];
           }
           next();
-        })
-      
+        }); 
       });
     } catch (error) {
       console.log(error);
@@ -134,7 +133,6 @@ exports.isLoggedIn = async (req, res, next) => {
   } else {
     next();
   }
-
 }
 
 exports.logout = async (req, res) => {

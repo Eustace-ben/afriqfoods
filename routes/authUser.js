@@ -3,6 +3,7 @@ route = express.Router();
 const userController = require('../controllers/userController');
 const editController = require('../controllers/editController');
 const addDetailsController = require('../controllers/addDetailsController');
+const imgController = require('../controllers/imgController');
 
 route.post('/register', userController.create);
 route.post('/login', userController.login);
@@ -13,10 +14,9 @@ route.post('/editInfo', userController.isLoggedIn, editController.editInfo );
 route.post('/edit', userController.isLoggedIn, editController.edit);
 
 
+route.post('/showcase', userController.isLoggedIn, imgController.uploading);
+
+
 
 module.exports = route;
-
-
-
-
 

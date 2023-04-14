@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController')
-const addDetailsController = require('../controllers/addDetailsController');
-const db = require('../database/database')
+// const addDetailsController = require('../controllers/addDetailsController');
+// const db = require('../database/database');
+const imgController = require('../controllers/imgController');
 
 router.get('/',userController.isLoggedIn, (req, res)=>{
         res.render('main', {layout: 'home', user : req.user});
@@ -16,12 +17,20 @@ router.get('/login', (req, res)=>{
     res.render('main', {layout: 'login'});
 });
 
-router.get('/edit/:id',userController.isLoggedIn, (req, res)=>{
+router.get('/edit/:id',userController.isLoggedIn,(req, res)=>{
     const data = req.user;
     res.render('main', {layout: 'edit', data});
 });
 
-router.get('/editInfo/:id',userController.isLoggedIn, (req, res)=>{
+router.get('/showcase/:id', userController.isLoggedIn,(req, res)=>{
+    if(req.user){
+        res.render('main', {layout: 'showcase'})
+    }else{
+        res.redirect('/login');
+    }
+});
+
+router.get('/editInfo/:id', userController.isLoggedIn, (req, res)=>{
     res.render('main', {layout: 'editInfo', result : req.result});
 });
 
@@ -30,7 +39,7 @@ router.get('/addDetails/:id',userController.isLoggedIn, (req, res)=>{
     res.render('main', {layout: 'addDetails', data});
 });
 
-router.get('/profile', userController.isLoggedIn,  async(req, res)=>{
+router.get('/profile', userController.isLoggedIn, (req, res)=>{
    
     if( req.user){
         res.render('main', {layout: 'profile', user : req.user, result : req.result});

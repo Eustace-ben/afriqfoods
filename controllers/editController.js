@@ -25,10 +25,6 @@ exports.editInfo = async(req, res, next)=>{
 }
 
 
-
-
-
-
  //Update User information in the users table
 exports.edit = async(req, res, next)=>{
   if(req.user){
