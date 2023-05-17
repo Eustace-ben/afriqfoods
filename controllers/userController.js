@@ -4,16 +4,6 @@ const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const db = require('../database/database')
 
-// const mysql = require('mysql2')
-// db = mysql.createConnection({
-//   host: process.env.DB_HOST,
-//   database: process.env.DB_NAME,
-//   user: process.env.DB_USER,
-//   port: process.env.DB_PORT,
-//   password: process.env.DB_PASSWORD
-
-// });
-
 
 
 
@@ -28,17 +18,19 @@ exports.create = async (req, res) => {
   const Confirmpassword = req.body.Confirmpassword;
 
   if (!name || !email || !password) {
-    return res.render('main', { layout: 'register', message1: " Complete all the fields" })
+      
+     return res.render('register', {  message: " Complete all the fields" })
+    
   }
 
   db.query("SELECT * FROM users WHERE email = ?", [email], async (error, data1) => {
     if (error) throw error;
     if (data1.length > 0) {
-      //console.log('Email aleady exits')
-      return res.render('main', { layout: 'register', message2: " Email aleady exits" });
+     
+      return res.render('register', {  message: " Email aleady exits" });
 
     } else if (password !== Confirmpassword) {
-      return res.render('main', { layout: 'register', message2: " Passwords Dont match" });
+      return res.render('register', {  message: " Passwords Dont match" });
     } else {
       const hashedpassword = await bcrypt.hash(password, 8);
       console.log(hashedpassword);
@@ -48,9 +40,11 @@ exports.create = async (req, res) => {
       db.query('INSERT INTO users SET ?', { name: name, email: email, password: hashedpassword }, async (error, data) => {
         if (error) {
           console.log(error);
-          return res.render('main', { layout: 'register', message1: " User registration Failed" });
+       
+          return res.render('register', { message: " User registration Failed" });
         } else {
-          res.render('main', { layout: 'login', data, message1: " User registered, YOU can login now!!" });
+          //res.render('login', { layout: 'login', data, message1: " User registered, YOU can login now!!" });
+         res.render('login', {  data, message1: " User registered, YOU can login now!!" });
         }
 
       });
@@ -68,19 +62,19 @@ exports.login = async (req, res) => {
   try {
 
     if (!email || !password) {
-      return res.render('main', { layout: 'login', message2: "Complete all the field" });
+      return res.render('login', {  message: "Complete all the field" });
     }
 
-    db.query("SELECT * FROM users WHERE email = ?", [email], async(error, data5) => {
+    db.query("SELECT * FROM users WHERE email = ?", [email], async (error, data5) => {
       if (error) throw error;
       if (!data5.length) {
         console.log("Email not correct")
-        return res.render('main', {layout: 'login', message2: "Enter correct email or password ", data5 });
+        return res.render('login', { message: "Enter correct email or password ", data5 });
       }
       const comparepass = await bcrypt.compare(password, data5[0].password);
       if (!comparepass) {
         console.log("Password not correct")
-        return res.render('main', { layout: 'login', message2: "Enter correct email or password " });
+        return res.render('login', {  message: "Enter correct email or password " });
       } else {
 
         const id = data5[0].id;
@@ -114,17 +108,54 @@ exports.isLoggedIn = async (req, res, next) => {
           return next();
         }
         req.user = data[0];
-       // console.log(req.user);
+        // console.log(req.user);
 
-        db.query("SELECT * FROM info WHERE user_id = ?",[req.user.id], (error, result1)=>{
-          if(!result1.length){
-             console.log("User have not added any details");
-          }else{
-          req.result = result1[0];
+        db.query("SELECT * FROM info WHERE user_id = ?", [req.user.id], (error, result1) => {
+          if (!result1.length) {
+            console.log("User have not added any details");
+          } else {
+            req.result = result1[0];
           }
-          next();
-        }); 
-      });
+
+
+
+   //Configuring Pagination 
+   const resultsPerPage = 10;
+   let sql = 'SELECT * FROM cuisine';
+   db.query(sql, (err, data2) => {
+       if(err) throw err;
+       const numOfResults = data2.length;
+       const numberOfPages = Math.ceil(numOfResults / resultsPerPage);
+       let page = req.query.page ? Number(req.query.page) : 1;
+       if(page > numberOfPages){
+           res.redirect('/?page='+encodeURIComponent(numberOfPages));
+       }else if(page < 1){
+           res.redirect('/?page='+encodeURIComponent('1'));
+       }
+       //Determine the SQL LIMIT starting number
+       const startingLimit = (page - 1) * resultsPerPage;
+       //Get the relevant number of POSTS for this starting page
+       sql = `SELECT * FROM cuisine LIMIT ${startingLimit},${resultsPerPage}`;
+       db.query(sql, (err, data2)=>{
+           if(err) throw err;
+           let iterator = (page - 5) < 1 ? 1 : page - 5;
+           let endingLink = (iterator + 9) <= numberOfPages ? (iterator + 9) : page + (numberOfPages - page);
+           if(endingLink < (page + 4)){
+               iterator -= (page + 4) - numberOfPages;
+           }
+         //  res.render('index', {data: data2, page, iterator, endingLink, numberOfPages});
+           req.iterator = iterator
+           req.endingLink = endingLink
+           req.page = page
+           req.numberOfPages = numberOfPages
+           req.data2 = data2
+           next();
+       });
+   });
+});
+
+//cousin code ended 
+        });
     } catch (error) {
       console.log(error);
       next();
@@ -135,6 +166,11 @@ exports.isLoggedIn = async (req, res, next) => {
   }
 }
 
+
+
+
+
+// log user out
 exports.logout = async (req, res) => {
   res.cookie('jwt', 'logout', {
     expires: new Date(
@@ -142,7 +178,8 @@ exports.logout = async (req, res) => {
     )
   }, httpOnly = true
   )
-  res.redirect('/');
+
+   res.redirect('/');
 }
 
 
